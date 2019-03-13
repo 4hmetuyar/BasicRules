@@ -20,9 +20,9 @@ if (x == 0) {
 ### Compliant Solution (Uygun Kod Örneği) :
 
 ```javascript
-if (x == 0) {
+if (x === 0) {
   doSomething();
-} else if (x == 1) {
+} else if (x === 1) {
   doSomethingElse();
 } else {
   throw "Unexpected value for x";
