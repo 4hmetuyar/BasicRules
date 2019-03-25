@@ -11,7 +11,8 @@ abstract class Base
     {
       //...
     }
-}```
+}
+```
 
 ### Compliant Solution (Uygun Kod Örneği) :
 
