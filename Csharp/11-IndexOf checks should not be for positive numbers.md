@@ -1,0 +1,64 @@
+# "IndexOf" checks should not be for positive numbers
+
+
+ - Most checks against an `IndexOf` value compare it with -1 because 0 is a valid index. Any checks which look for values >0 ignore the first element, which is likely a bug. If the intent is merely to check inclusion of a value in a string, List, or an array, consider using the Contains method instead.
+
+- This rule raises an issue when an `IndexOf` value retrieved from a string, List, or array is tested against >0.
+
+### Noncompliant Code Example (Uygunsuz Kod Örneği) :
+
+```c#
+string color = "blue";
+string name = "ishmael";
+
+List<string> strings = new List<string>();
+strings.Add(color);
+strings.Add(name);
+string[] stringArray = strings.ToArray();
+
+if (strings.IndexOf(color) > 0) // Noncompliant
+{
+  // ...
+}
+if (name.IndexOf("ish") > 0) // Noncompliant
+{
+  // ...
+}
+if (name.IndexOf("ae") > 0) // Noncompliant
+{
+  // ...
+}
+if (Array.IndexOf(stringArray, color) > 0) // Noncompliant
+{
+  // ...
+}
+```
+
+### Compliant Solution (Uygun Kod Örneği) :
+
+```c#
+string color = "blue";
+string name = "ishmael";
+
+List<string> strings = new List<string> ();
+strings.Add(color);
+strings.Add(name);
+string[] stringArray = strings.ToArray();
+
+if (strings.IndexOf(color) > -1)
+{
+  // ...
+}
+if (name.IndexOf("ish") >= 0)
+{
+  // ...
+}
+if (name.Contains("ae"))
+{
+  // ...
+}
+if (Array.IndexOf(stringArray, color) >= 0)
+{
+  // ...
+}
+```
