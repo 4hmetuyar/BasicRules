@@ -1,0 +1,65 @@
+# "==" should not be used when "Equals" is overridden
+
+
+- Using the equality == and inequality != operators to compare two objects generally works. The operators can be overloaded, and therefore the comparison can resolve to the appropriate method. However, when the operators are used on interface instances, then == resolves to reference equality, which may result in unexpected behavior if implementing classes override Equals. Similarly, when a class overrides Equals, but instances are compared with non-overloaded ==, there is a high chance that value comparison was meant instead of the reference one.
+
+### Noncompliant Code Example (Uygunsuz Kod Örneği) :
+
+```c#
+public interface IMyInterface
+{
+}
+
+public class MyClass : IMyInterface
+{
+    public override bool Equals(object obj)
+    {
+        //...
+    }
+}
+
+public class Program
+{
+    public static void Method(IMyInterface instance1, IMyInterface instance2)
+    {
+        if (instance1 == instance2) // Noncompliant, will do reference equality check, but was that intended? MyClass overrides Equals.
+        {
+            Console.WriteLine("Equal");
+        }
+    }
+}
+```
+
+### Compliant Solution (Uygun Kod Örneği) :
+
+```c#
+public interface IMyInterface
+{
+}
+
+public class MyClass : IMyInterface
+{
+    public override bool Equals(object obj)
+    {
+        //...
+    }
+}
+
+public class Program
+{
+    public static void Method(IMyInterface instance1, IMyInterface instance2)
+    {
+        if (object.Equals(instance1, instance2)) // object.Equals checks for null and then calls the instance based Equals, so MyClass.Equals
+        {
+            Console.WriteLine("Equal");
+        }
+    }
+}
+```
+
+### Exceptions
+
+- The rule does not report on comparisons of System.Type instances and on comparisons inside Equals overrides.
+
+- It also does not raise an issue when one of the operands is null nor when one of the operand is cast to object (because in this case we want to ensure reference equality even if some == overload is present).
+
